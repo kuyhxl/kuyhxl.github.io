@@ -7,6 +7,20 @@ weight: 1               # (선택) 카드 정렬 우선순위
 안녕하세요, 황찬혁입니다.  
 이 블로그는 공부 기록과 실험을 정리하는 공간입니다.
 
-- 관심사: 시스템/네트워크, 파이썬, C++  
-- 목표: 매주 1편 이상 포스팅  
-- 문의: me@example.com
+## 	Skills
+
+- C/C++
+- Python
+- Spring
+
+## Education
+
+### - KwangWoon University 
+
+Computer and Information Engineering (March 2020 - Present )
+
+## Certificate
+
+## Interest
+
+## Goal
