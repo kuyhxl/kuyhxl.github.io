@@ -1,0 +1,20 @@
+# --- Hugo build outputs ---
+/public/
+/resources/
+.hugo_build.lock
+hugo_stats.json
+
+# --- OS / Editor junk ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# --- Node/Tooling (if ever used) ---
+node_modules/
+*.cache/
+.sass-cache/
+
+# --- Theme nested repos (safety) ---
+**/themes/*/.git/
