@@ -1,8 +1,8 @@
 name: Build & Deploy Hugo
-name: Build & Deploy Hugo
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 permissions:
   contents: read
   pages: write
@@ -15,14 +15,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.150.0'
           extended: true
-      - run: hugo --minify
+
+      - name: Build site
+        run: hugo --minify --gc
+
+      - name: Verify build output
+        run: |
+          echo "Working directory: $(pwd)"
+          ls -la
+          if [ ! -d public ]; then
+            echo "::error::'public' folder not found. Hugo build likely failed."
+            exit 1
+          fi
+          echo "public/ contents:" && ls -la public
+
+      - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: public
+
   deploy:
     environment:
       name: github-pages
