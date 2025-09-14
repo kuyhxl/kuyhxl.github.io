@@ -1,0 +1,13 @@
+
+name = "Github Style"
+license = "MIT"
+licenselink = "https://github.com/kuyhxl/github-style/blob/master/LICENSE"
+description = "github-style hugo theme"
+homepage = "https://github.com/kuyhxl"
+tags = ["blog", "google analytics"]
+features = ["google analytics"]
+min_version = "0.41"
+
+[author]
+  name = "Kuyhxl"
+  homepage = "https://github.com/kuyhxl"
