@@ -1,0 +1,57 @@
+baseURL = "https://kuyhxl.github.io/"
+languageCode = "ko-kr"
+title = "Kuyhxl's blog"
+theme = "github-style"
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+
+[params]
+  author = "Mark"
+  description = "Whatever"
+  github = "kuyhxl"
+  linkedin = "kuyhxl"
+  instagram = "kuyhxl"
+  email = "makrhwang710@gmail.com"
+  url = "https://kuyhxl.github.io"
+  keywords = "blog, google analytics"
+  rss = true
+  lastmod = true
+  favicon = "/images/github-mark.png"
+  avatar = "/images/avatar.png"
+  headerIcon = "/images/github-mark-white.png"
+  location = "Korea"
+  userStatusEmoji = ""
+  enableGitalk = true
+  enableSearch = true
+
+  [params.gitalk]
+    clientID = "Ov23liAL5t2E0yOcEfjn"
+    clientSecret = "" 
+    repo = "blog-comments"
+    owner = "kuyhxl" 
+    admin = ["kuyhxl"]
+    id = "location.pathname" 
+    labels = ["comment"] 
+    perPage = 20 
+    pagerDirection = "last" 
+    createIssueManually = false 
+    distractionFreeMode = false 
+    proxy = "https://gitalk-oauth-proxy.markhwang710.workers.dev/"
+  [[params.links]]
+    title = "Github"
+    href = "https://github.com/kuyhxl"
+
+[frontmatter]
+  lastmod = ["lastmod", ":fileModTime", ":default"]
+
+[outputs]
+  home = ["html", "json"]
+
+[outputFormats.json]
+  mediaType = "application/json"
+  baseName = "index"
+  isPlainText = false
+
+#[services]
+#  [services.googleAnalytics]
+#    ID = "UA-123456-789"
