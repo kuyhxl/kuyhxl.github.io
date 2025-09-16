@@ -1,8 +1,10 @@
 +++
 title = "{{ replace .Name "-" " " | title }}"
-date = {{ .Date }}
+date = {{ ".Date "}}
 draft = true
-categories = []
-tags = []
+categories = [""]
+tags = [""]
 pin = false
+mathJax = false
+katex = false
 +++

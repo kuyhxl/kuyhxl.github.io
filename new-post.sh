@@ -1,81 +1,78 @@
 #!/bin/bash
 # ================================================
-# »ç¿ë ¼³¸í¼­ (new-post.sh)
+# ì‚¬ìš© ì„¤ëª…ì„œ (new-post.sh)
 # -----------------------------------------------
-# ÀÌ ½ºÅ©¸³Æ®´Â Hugo ºí·Î±×¿¡ »õ ±ÛÀ» ÀÛ¼ºÇÏ°í,
-# ÀÌ¹ÌÁö Æú´õ¸¦ »ý¼ºÇÑ µÚ, Ä¿¹Ô & Çª½Ã±îÁö ÀÚµ¿È­ÇÕ´Ï´Ù.
+# ì´ ìŠ¤í¬ë¦½íŠ¸ëŠ” Hugo ë¸”ë¡œê·¸ì— ìƒˆ ê¸€ì„ ìž‘ì„±í•˜ê³ ,
+# ì´ë¯¸ì§€ í´ë”ë¥¼ ìƒì„±í•œ ë’¤, ì»¤ë°‹ & í‘¸ì‹œê¹Œì§€ ìžë™í™”í•©ë‹ˆë‹¤.
 #
-# »ç¿ë¹ý:
-#   newpost "±Û Á¦¸ñ"       # alias »ç¿ë ±ÇÀå
-#   ¶Ç´Â Á÷Á¢ ½ÇÇà: ./new-post.sh "±Û Á¦¸ñ"
+# ì‚¬ìš©ë²•:
+#   newpost "ê¸€ ì œëª©"       # alias ì‚¬ìš© ê¶Œìž¥
+#   ë˜ëŠ” ì§ì ‘ ì‹¤í–‰: ./new-post.sh "ê¸€ ì œëª©"
 #
-# ½ÇÇà ½Ã µ¿ÀÛ:
-# 1. ¿À´Ã ³¯Â¥ + Á¦¸ñÀ¸·Î Markdown ÆÄÀÏ »ý¼º (content/post/)
-# 2. static/images/ ¿¡ µ¿ÀÏ ÀÌ¸§ Æú´õ »ý¼º (ÀÌ¹ÌÁö º¸°ü¿ë)
-# 3. Typora·Î ±Û ÆÄÀÏ ¿­±â ¡æ ÀÛ¼º ÈÄ ÀúÀå
-# 4. Enter Å° ÀÔ·Â ½Ã Hugo ºôµå + git add/commit/push ÀÚµ¿ ¼öÇà
-# 5. GitHub Actions°¡ ½ÇÇàµÇ¾î ºí·Î±×°¡ ¹èÆ÷µË´Ï´Ù.
+# ì‹¤í–‰ ì‹œ ë™ìž‘:
+# 1. ì œëª©ìœ¼ë¡œ Markdown íŒŒì¼ ìƒì„± (content/post/)
+# 2. static/images/ ì— ë™ì¼ ì´ë¦„ í´ë” ìƒì„± (ì´ë¯¸ì§€ ë³´ê´€ìš©)
+# 3. Typoraë¡œ ê¸€ íŒŒì¼ ì—´ê¸° â†’ ìž‘ì„± í›„ ì €ìž¥
+# 4. Enter í‚¤ ìž…ë ¥ ì‹œ Hugo ë¹Œë“œ + git add/commit/push ìžë™ ìˆ˜í–‰
+# 5. GitHub Actionsê°€ ì‹¤í–‰ë˜ì–´ ë¸”ë¡œê·¸ê°€ ë°°í¬ë©ë‹ˆë‹¤.
 #
-# À¯ÀÇ»çÇ×:
-# - Hugo ÇÁ·ÎÁ§Æ® ·çÆ®(=hugo.toml ÀÖ´Â À§Ä¡)¿¡¼­ ½ÇÇàÇØ¾ß ÇÔ
-# - draft=false ·Î ¼³Á¤ÇØ¾ß ¹èÆ÷µÊ
-# - Typora ¼³Ä¡ ÇÊ¿ä (¼³Ä¡ ¾È µÈ °æ¿ì Á÷Á¢ ÆÄÀÏ ¿­±â)
+# ìœ ì˜ì‚¬í•­:
+# - Hugo í”„ë¡œì íŠ¸ ë£¨íŠ¸(=hugo.toml ìžˆëŠ” ìœ„ì¹˜)ì—ì„œ ì‹¤í–‰í•´ì•¼ í•¨
+# - draft=false ë¡œ ì„¤ì •í•´ì•¼ ë°°í¬ë¨
+# - Typora ì„¤ì¹˜ í•„ìš” (ì„¤ì¹˜ ì•ˆ ëœ ê²½ìš° ì§ì ‘ íŒŒì¼ ì—´ê¸°)
 # ================================================
-# new-post.sh : »õ ±Û + ÀÌ¹ÌÁö Æú´õ »ý¼º + Ä¿¹Ô/Çª½Ã±îÁö ÀÚµ¿È­
+# new-post.sh : ìƒˆ ê¸€ + ì´ë¯¸ì§€ í´ë” ìƒì„± + ì»¤ë°‹/í‘¸ì‹œê¹Œì§€ ìžë™í™”
 
 TITLE=$1
 
 if [ -z "$TITLE" ]; then
-  echo "? Á¦¸ñÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä. ¿¹: ./new-post.sh '¿À´ÃÀÇ ºí·Î±× ±Û'"
+  echo "? ì œëª©ì„ ìž…ë ¥í•´ì£¼ì„¸ìš”. ì˜ˆ: ./new-post.sh 'ì˜¤ëŠ˜ì˜ ë¸”ë¡œê·¸ ê¸€'"
   exit 1
 fi
 
-# ¿À´Ã ³¯Â¥ + ½½·¯±× »ý¼º
-DATE=$(date +%Y-%m-%d)
-SLUG="${DATE}-${TITLE// /-}" # °ø¹éÀ» -·Î ¹Ù²ã¼­ ÆÄÀÏ¸í »ý¼º
+SLUG="${TITLE// /-}" # ê³µë°±ì„ -ë¡œ ë°”ê¿”ì„œ íŒŒì¼ëª… ìƒì„±
 POST_PATH="content/post/$SLUG.md"
 IMAGE_DIR="static/images/$SLUG"
 
 
-# ±Û »ý¼º
-echo "? »õ ±Û »ý¼º: $POST_PATH"
+# ê¸€ ìƒì„±
+echo "? ìƒˆ ê¸€ ìƒì„±: $POST_PATH"
 hugo new "$POST_PATH"
 
-# UTF-8 ÀÎÄÚµù °­Á¦ Àû¿ë
+# UTF-8 ì¸ì½”ë”© ê°•ì œ ì ìš©
 iconv -f UTF-8 -t UTF-8 "$POST_PATH" > "$POST_PATH.tmp" && mv "$POST_PATH.tmp" "$POST_PATH"
 
-# ÀÌ¹ÌÁö Æú´õ »ý¼º
+# ì´ë¯¸ì§€ í´ë” ìƒì„±
 mkdir -p "$IMAGE_DIR"
-echo "? ÀÌ¹ÌÁö Æú´õ »ý¼º: $IMAGE_DIR"
+echo "? ì´ë¯¸ì§€ í´ë” ìƒì„±: $IMAGE_DIR"
 
-# Typora·Î ±Û ÆÄÀÏ ¿­±â
-if command -v typora &> /dev/null
-then
-  typora "$POST_PATH"
+# Typoraë¡œ ê¸€ íŒŒì¼ ì—´ê¸°
+if open -Ra "Typora.app"; then
+  open -a "Typora.app" "$POST_PATH"
 else
-  echo "?? Typora¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. ¼öµ¿À¸·Î ÆÄÀÏÀ» ¿­¾î ÆíÁýÇÏ¼¼¿ä."
+  echo "âš ï¸ Typora ì‹¤í–‰ ì‹¤íŒ¨: ìˆ˜ë™ìœ¼ë¡œ íŒŒì¼ì„ ì—´ì–´ íŽ¸ì§‘í•˜ì„¸ìš”."
 fi
 
-# ±Û ÀÛ¼º ¿Ï·á ´ë±â
-read -p "?? ±Û ÀÛ¼º ÈÄ ÀúÀåÇßÀ¸¸é Enter Å°¸¦ ´­·¯ °è¼Ó ÁøÇà ¡æ "
+# ê¸€ ìž‘ì„± ì™„ë£Œ ëŒ€ê¸°
+read -p "?? ê¸€ ìž‘ì„± í›„ ì €ìž¥í–ˆìœ¼ë©´ Enter í‚¤ë¥¼ ëˆŒëŸ¬ ê³„ì† ì§„í–‰ â†’ "
 
-# ¹èÆ÷ ¿©ºÎ È®ÀÎ
-read -r -p "? Áö±Ý ¹èÆ÷ÇÒ±î¿ä? [y/N]: " CONFIRM
+# ë°°í¬ ì—¬ë¶€ í™•ì¸
+read -r -p "ðŸš€ ì§€ê¸ˆ ë°°í¬í• ê¹Œìš”? [Y/N]: " CONFIRM
 case "$CONFIRM" in
-  [yY]|[yY][eE][sS])
-    echo "? Hugo ºôµå ½ÇÇà Áß..."
+  [yY]|[Yy][Ee][Ss])
+    echo "âœ… Hugo ë¹Œë“œ ì‹¤í–‰ ì¤‘..."
     hugo --minify
 
-    echo "? Git Ä¿¹Ô & Çª½Ã ½ÃÀÛ..."
+    echo "âœ… Git ì»¤ë°‹ & í‘¸ì‹œ ì‹œìž‘..."
     git add .
-    git commit -m "post: $TITLE"
+    git commit -m "post: ${TITLE}"
     git push origin main
 
-    echo "? ¹èÆ÷ ¿Ï·á! GitHub Actions¿¡¼­ ÀÚµ¿ ¹èÆ÷°¡ ½ÃÀÛµË´Ï´Ù."
-    echo "? https://kuyhxl.github.io/ ¿¡¼­ Àá½Ã ÈÄ È®ÀÎÇÏ¼¼¿ä."
+    echo "ðŸš€ ë°°í¬ ì™„ë£Œ! GitHub Actionsì—ì„œ ìžë™ ë°°í¬ê°€ ì‹œìž‘ë©ë‹ˆë‹¤."
+    echo "ðŸŒ https://kuyhxl.github.io/ ì—ì„œ ìž ì‹œ í›„ í™•ì¸í•˜ì„¸ìš”."
     ;;
   *)
-    echo "? ¹èÆ÷¸¦ °Ç³Ê¶Ý´Ï´Ù. ³ªÁß¿¡ ¹èÆ÷ÇÏ·Á¸é ¾Æ·¡ ¸í·É Áß ÇÏ³ª¸¦ »ç¿ëÇÏ¼¼¿ä:"
-    echo "   blogpush \"post: $TITLE\"   # ¶Ç´Â git add/commit/push"
+    echo "â¸ ë°°í¬ë¥¼ ê±´ë„ˆëœë‹ˆë‹¤. ë‚˜ì¤‘ì— ë°°í¬í•˜ë ¤ë©´ ì•„ëž˜ ëª…ë ¹ ì¤‘ í•˜ë‚˜ë¥¼ ì‚¬ìš©í•˜ì„¸ìš”:"
+    echo "   blogpush \"post: ${TITLE}\"   # ë˜ëŠ” git add/commit/push"
     ;;
 esac
